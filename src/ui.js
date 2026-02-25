@@ -33,8 +33,16 @@ class UIManager {
                         </p>
                     </div>
                     <div class="flex items-center gap-6">
+                        <div class="flex flex-col items-end">
+                            <span class="text-[8px] font-black text-indigo-400/60 uppercase tracking-widest">Daily Min</span>
+                            <div class="flex items-baseline gap-1">
+                                <span id="global-min-val" class="text-lg font-black text-white">0</span>
+                                <span class="text-[10px] font-bold text-white/40">K</span>
+                            </div>
+                        </div>
+                        <div class="w-px h-6 bg-white/10"></div>
                         <div class="flex items-center gap-2">
-                            <span class="text-[9px] font-black text-gray-500 uppercase tracking-widest">Current Streak</span>
+                            <span class="text-[9px] font-black text-gray-500 uppercase tracking-widest">Streak</span>
                             <span id="streak-val" class="text-xl font-black text-white tabular-nums">0</span>
                             <span class="text-base">🔥</span>
                         </div>
@@ -57,7 +65,8 @@ class UIManager {
                                 </div>
                                 <div>
                                     <h1 class="text-4xl font-black tracking-tighter text-white">GOAL OPTIMIZER</h1>
-                                    <p class="text-[10px] font-black text-indigo-400 uppercase tracking-[0.5em] ml-1">Universal Analytics v3</p>
+                                    <p id="version-label" class="text-[10px] font-black text-indigo-400 uppercase tracking-[0.5em] mt-1">Universal Analytics v3</p>
+                                </div>
                                 </div>
                             </div>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full lg:w-auto">
@@ -133,64 +142,24 @@ class UIManager {
                     </section>
                 </header>
 
-                <div class="grid grid-cols-1 xl:grid-cols-2 gap-10">
-                    <!-- LEFT: SIMULATION LAB -->
-                    <div class="space-y-8 bg-blue-500/[0.02] p-2 rounded-[3.5rem] border border-blue-500/5">
-                        <div class="p-8 md:p-12 space-y-12">
-                            <h2 class="text-xl font-black text-white tracking-tight flex items-center gap-4">
-                                <span class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-sm shadow-xl shadow-blue-500/20">01</span>
-                                SIMULATION LAB
-                            </h2>
-
-                            <section class="bg-gray-900/40 p-10 rounded-[2.5rem] border border-white/5 shadow-xl space-y-12">
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-                                    <div class="space-y-4">
-                                        <div class="flex justify-between items-start">
-                                            <label class="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] block pt-1">Setup Target (₫)</label>
-                                            <div class="flex flex-col items-end">
-                                               <span id="sim-target-formatted" class="text-base font-black text-blue-400/90 tabular-nums mb-1">0 ₫</span>
-                                               <input type="number" id="sim-target-amount-num" step="2000" min="2000" 
-                                                    class="bg-transparent border-none text-right text-gray-700 font-bold text-[9px] outline-none w-32 tabular-nums focus:text-blue-500/50">
-                                            </div>
-                                        </div>
-                                        <input type="range" id="sim-target-amount" step="2000" min="2000" max="10000000"
-                                            class="w-full h-2.5 bg-gray-800 rounded-full appearance-none cursor-pointer accent-blue-600">
-                                        <div class="flex justify-between text-[8px] font-bold text-gray-700 uppercase tracking-tighter">
-                                            <span>2k</span>
-                                            <span>5M</span>
-                                            <span>10M</span>
-                                        </div>
-                                    </div>
-                                    <div class="space-y-6">
-                                        <div class="flex justify-between items-center">
-                                            <label class="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em]">Setup Days</label>
-                                            <span id="sim-label-days" class="text-xs font-black text-blue-400 px-3 py-1 bg-blue-500/10 rounded-lg">30 Days</span>
-                                        </div>
-                                        <input type="range" id="sim-target-days" min="1" max="365" 
-                                            class="w-full h-2.5 bg-gray-800 rounded-full appearance-none cursor-pointer accent-blue-600">
-                                    </div>
+                <div class="flex flex-col lg:flex-row gap-8 lg:gap-12">
+                    <!-- MAIN: TRACKING MATRIX (Priority Focus) -->
+                    <div class="order-1 lg:w-2/3 space-y-8 bg-emerald-500/[0.02] p-1 md:p-2 rounded-[3.5rem] border border-emerald-500/5">
+                        <div class="p-6 md:p-10 space-y-10">
+                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                                <h2 class="text-2xl font-black text-white tracking-tight flex items-center gap-4">
+                                    <span class="w-12 h-12 rounded-2xl bg-emerald-600 flex items-center justify-center text-base shadow-xl shadow-emerald-500/20 rotate-3">01</span>
+                                    TRACKING MATRIX
+                                </h2>
+                                <div class="bg-indigo-600/10 border border-indigo-500/20 px-6 py-3 rounded-2xl flex items-center gap-4 shadow-xl">
+                                    <span class="text-[9px] font-black text-gray-500 uppercase tracking-widest">Active Streak</span>
+                                    <span id="local-streak-val" class="text-2xl font-black text-white tabular-nums">0</span>
+                                    <span class="text-xl animate-bounce">🔥</span>
                                 </div>
-                            </section>
+                            </div>
 
-                            <section class="space-y-6">
-                                <label class="text-[10px] font-black text-gray-600 uppercase tracking-[0.4em] block ml-4">Hypothetical Velocity Blocks</label>
-                                <div id="weekly-container" class="grid grid-cols-1 md:grid-cols-2 gap-5 max-h-[600px] overflow-y-auto pr-3 custom-scrollbar">
-                                    <!-- Sim blocks -->
-                                </div>
-                            </section>
-                        </div>
-                    </div>
-
-                    <!-- RIGHT: TRACKING MATRIX -->
-                    <div class="space-y-8 bg-emerald-500/[0.02] p-2 rounded-[3.5rem] border border-emerald-500/5">
-                        <div class="p-8 md:p-12 space-y-12">
-                            <h2 class="text-xl font-black text-white tracking-tight flex items-center gap-4">
-                                <span class="w-10 h-10 rounded-full bg-emerald-600 flex items-center justify-center text-sm shadow-xl shadow-emerald-500/20">02</span>
-                                TRACKING MATRIX
-                            </h2>
-
-                            <section class="bg-gray-900/40 p-10 rounded-[2.5rem] border border-white/5 shadow-xl space-y-12">
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                            <section class="bg-gray-900/40 p-8 rounded-[2.5rem] border border-white/5 shadow-xl space-y-8">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
                                     <div class="space-y-4">
                                         <div class="flex justify-between items-start">
                                             <label class="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] block pt-1">Real Goal (₫)</label>
@@ -202,11 +171,6 @@ class UIManager {
                                         </div>
                                         <input type="range" id="act-target-amount" step="2000" min="2000" max="10000000"
                                             class="w-full h-2.5 bg-gray-800 rounded-full appearance-none cursor-pointer accent-emerald-600">
-                                        <div class="flex justify-between text-[8px] font-bold text-gray-700 uppercase tracking-tighter">
-                                            <span>2k</span>
-                                            <span>5M</span>
-                                            <span>10M</span>
-                                        </div>
                                     </div>
                                     <div class="space-y-6">
                                         <div class="flex justify-between items-center">
@@ -217,17 +181,59 @@ class UIManager {
                                             class="w-full h-2.5 bg-gray-800 rounded-full appearance-none cursor-pointer accent-emerald-600">
                                     </div>
                                 </div>
+                                <div class="mt-8 flex justify-center">
+                                    <button id="lock-btn" onclick="window.toggleLock()" class="group/lock flex items-center gap-3 px-8 py-3 rounded-2xl bg-indigo-600/10 border border-indigo-500/30 hover:bg-indigo-600/20 transition-all shadow-xl">
+                                        <span id="lock-icon" class="text-base">🔓</span>
+                                        <span id="lock-text" class="text-[10px] font-black text-indigo-300 uppercase tracking-[0.3em]">Commit Goal</span>
+                                    </button>
+                                </div>
                             </section>
 
                             <section class="space-y-8">
-                                <div class="flex items-center justify-between ml-4">
-                                    <label class="text-[10px] font-black text-gray-600 uppercase tracking-[0.4em] block">Momentum Capture Grid</label>
-                                    <div class="flex items-center gap-2 bg-emerald-500/5 px-3 py-1.5 rounded-xl border border-emerald-500/10">
-                                        <span class="text-[9px] font-black text-emerald-500/60 tracking-widest uppercase">Unit: ₫ x1000 (K)</span>
-                                    </div>
+                                <div class="flex items-center justify-between ml-2">
+                                    <label class="text-[10px] font-black text-gray-600 uppercase tracking-[0.4em] block">Tracking Grid</label>
+                                    <div class="text-[9px] font-black text-emerald-500/40 tracking-widest uppercase bg-black/20 px-3 py-1 rounded-lg">₫ x1000</div>
                                 </div>
-                                <div id="calendar-container" class="space-y-14 max-h-[1200px] overflow-y-auto pr-4 custom-scrollbar">
+                                <div id="calendar-container" class="space-y-12">
                                     <!-- Blocks with Targets and Daily Logs -->
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+
+                    <!-- SECONDARY: SIMULATION LAB -->
+                    <div class="order-2 lg:w-1/3 space-y-8 bg-blue-500/[0.01] p-1 rounded-[3.5rem] border border-blue-500/5">
+                        <div class="p-6 md:p-8 space-y-8">
+                            <h2 class="text-lg font-black text-gray-500 tracking-tight flex items-center gap-4">
+                                <span class="w-8 h-8 rounded-xl bg-gray-800 flex items-center justify-center text-[10px] shadow-lg text-gray-400">02</span>
+                                SIMULATION LAB
+                            </h2>
+
+                            <section class="bg-gray-900/20 p-6 rounded-[2rem] border border-white/5 space-y-8">
+                                <div class="space-y-4">
+                                    <div class="flex justify-between items-center">
+                                        <label class="text-[9px] font-black text-gray-600 uppercase tracking-widest">Plan Target</label>
+                                        <span id="sim-target-formatted" class="text-sm font-black text-blue-400/70 tabular-nums">0 ₫</span>
+                                    </div>
+                                    <input type="range" id="sim-target-amount" step="2000" min="2000" max="10000000"
+                                        class="w-full h-1.5 bg-gray-800 rounded-full appearance-none cursor-pointer accent-blue-900">
+                                    <input type="number" id="sim-target-amount-num" step="2000" min="2000" 
+                                        class="bg-transparent border-none text-left text-gray-800 font-bold text-[8px] outline-none w-full tabular-nums focus:text-blue-500/50">
+                                </div>
+                                <div class="space-y-4">
+                                    <div class="flex justify-between items-center">
+                                        <label class="text-[9px] font-black text-gray-600 uppercase tracking-widest">Timeline</label>
+                                        <span id="sim-label-days" class="text-[10px] font-black text-blue-500/70">30 Days</span>
+                                    </div>
+                                    <input type="range" id="sim-target-days" min="1" max="365" 
+                                        class="w-full h-1.5 bg-gray-800 rounded-full appearance-none cursor-pointer accent-blue-900">
+                                </div>
+                            </section>
+
+                            <section class="space-y-4">
+                                <label class="text-[9px] font-black text-gray-700 uppercase tracking-[0.2em] block ml-2">Velocity Presets</label>
+                                <div id="weekly-container" class="grid grid-cols-1 gap-4">
+                                    <!-- Sim blocks -->
                                 </div>
                             </section>
                         </div>
@@ -259,14 +265,59 @@ class UIManager {
         const act = calculateActualAndProjection(state);
         const analytics = calculateAnalytics(state);
 
+        // Update Lock UI
+        const lockBtn = document.getElementById('lock-btn');
+        const lockIcon = document.getElementById('lock-icon');
+        const lockText = document.getElementById('lock-text');
+
+        if (lockBtn) {
+            if (state.isLocked) {
+                lockBtn.className = "group/lock flex items-center gap-2 px-3 py-1 rounded-full bg-rose-600/20 border border-rose-500/40 shadow-[0_0_15px_rgba(244,63,94,0.1)] transition-all";
+                if (lockIcon) lockIcon.textContent = "🔒";
+                if (lockText) {
+                    lockText.textContent = "Goal Locked";
+                    lockText.className = "text-[8px] font-black text-rose-300 uppercase tracking-widest";
+                }
+            } else {
+                lockBtn.className = "group/lock flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-600/10 border border-indigo-500/20 hover:bg-indigo-600/20 transition-all";
+                if (lockIcon) lockIcon.textContent = "🔓";
+                if (lockText) {
+                    lockText.textContent = "Commit Goal";
+                    lockText.className = "text-[8px] font-black text-indigo-300 uppercase tracking-widest";
+                }
+            }
+        }
+
+        // Disable inputs if locked
+        const targetInputs = ['sim-target-amount', 'sim-target-amount-num', 'sim-target-days', 'act-target-amount', 'act-target-amount-num', 'act-target-days'];
+        targetInputs.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.disabled = state.isLocked;
+        });
+
         // Header Analytics
         document.getElementById('insight-text').textContent = analytics.insight;
         document.getElementById('streak-val').textContent = analytics.streak;
+        document.getElementById('local-streak-val').textContent = analytics.streak;
         document.getElementById('max-streak-val').textContent = analytics.maxStreak;
 
         // Stats
         document.getElementById('sim-completion').textContent = `Day ${sim.completionDay}`;
-        document.getElementById('act-completion').textContent = `Day ${act.completionDay}`;
+
+        // Smart act-completion: show calendar date if startDate known
+        const actCompletionEl = document.getElementById('act-completion');
+        if (actCompletionEl) {
+            if (state.actStartDate && act.completionDay) {
+                const finishTs = state.actStartDate + act.completionDay * 24 * 60 * 60 * 1000;
+                const finishDate = new Date(finishTs);
+                const dd = finishDate.getDate();
+                const mm = finishDate.getMonth() + 1;
+                actCompletionEl.textContent = `D${act.completionDay} · ${dd}/${mm}`;
+            } else {
+                actCompletionEl.textContent = `Day ${act.completionDay}`;
+            }
+        }
+
         document.getElementById('sim-status').textContent = sim.status.toUpperCase();
         document.getElementById('act-status').textContent = act.status.toUpperCase();
 
@@ -338,7 +389,8 @@ class UIManager {
                 simTarget: state.simTargetAmount,
                 actTarget: state.actTargetAmount,
                 simDays: state.simTargetDays,
-                actDays: state.actTargetDays
+                actDays: state.actTargetDays,
+                momentumDay: act.completionDay
             };
             const ctx = document.getElementById('unified-chart')?.getContext('2d');
             if (ctx) {
@@ -351,7 +403,8 @@ class UIManager {
     updateSimBlockList(state) {
         const container = document.getElementById('weekly-container');
         const count = state.simWeeksConfig.length;
-        if (container.children.length !== count) {
+        if (container.children.length !== count || !container.dataset.version || container.dataset.version !== "3") {
+            container.dataset.version = "3";
             container.innerHTML = state.simWeeksConfig.map((week, idx) => {
                 const days = (idx === count - 1 && state.simTargetDays % 7 !== 0) ? state.simTargetDays % 7 : 7;
                 return `
@@ -393,73 +446,117 @@ class UIManager {
         const count = state.actWeeksConfig.length;
 
         // Calculate Global Remaining Stats for DYNAMIC MIN
-        let totalLoggedAmount = 0;
-        let loggedDaysCount = 0;
-        const loggedDayIndices = new Set();
-
-        Object.entries(state.dailyLogs).forEach(([day, val]) => {
-            const dayIdx = parseInt(day);
-            if (val !== undefined && val !== null && dayIdx < state.actTargetDays) {
-                totalLoggedAmount += val;
-                loggedDaysCount++;
-                loggedDayIndices.add(dayIdx);
-            }
-        });
+        const dayIndices = Object.keys(state.dailyLogs).map(Number);
+        const lastDayLogged = dayIndices.length > 0 ? Math.max(...dayIndices) : -1;
+        const totalLoggedAmount = Object.values(state.dailyLogs).reduce((a, b) => {
+            const val = (typeof b === 'object' && b !== null) ? b.val : b;
+            return a + (val || 0);
+        }, 0);
 
         const remainingGlobalAmount = Math.max(0, state.actTargetAmount - totalLoggedAmount);
-        const remainingGlobalDays = Math.max(0, state.actTargetDays - loggedDaysCount);
+        const remainingGlobalDays = Math.max(1, state.actTargetDays - (lastDayLogged + 1));
 
-        // This is the baseline "speed" needed to finish ON TIME for the GLOBAL goal
-        const dynamicGlobalMinK = remainingGlobalDays > 0
-            ? Math.round((remainingGlobalAmount / remainingGlobalDays) / 1000 * 10) / 10
-            : Math.round(state.actTargetAmount / state.actTargetDays / 1000 * 10) / 10;
+        const dynamicGlobalMinK = Math.max(2, Math.round((remainingGlobalAmount / remainingGlobalDays) / 1000 * 10) / 10);
 
-        if (container.children.length !== count) {
+        // Identify Today's Index
+        const todayAtMidnight = new Date();
+        todayAtMidnight.setHours(0, 0, 0, 0);
+        const todayIdx = state.actStartDate ? Math.floor((todayAtMidnight.getTime() - state.actStartDate) / (24 * 60 * 60 * 1000)) : -1;
+
+        // Pre-compute active week index (the week containing today, or first unlogged)
+        const firstUnloggedDay = Array.from({ length: state.actTargetDays }).findIndex((_, i) => state.dailyLogs[i] === undefined || state.dailyLogs[i] === null);
+        const activeWeekIdx = todayIdx >= 0 && todayIdx < state.actTargetDays
+            ? Math.floor(todayIdx / 7)
+            : (firstUnloggedDay === -1 ? count - 1 : Math.floor(firstUnloggedDay / 7));
+
+        // Pre-compute analytics once
+        const analytics = calculateAnalytics(state);
+
+        // Update Global Min in UI
+        const globalMinEl = document.getElementById('global-min-val');
+        if (globalMinEl) globalMinEl.textContent = dynamicGlobalMinK;
+
+        if (container.children.length !== count || !container.dataset.version || container.dataset.version !== "3") {
+            container.dataset.version = "3";
             container.innerHTML = state.actWeeksConfig.map((week, idx) => {
                 const startDay = idx * 7;
                 const daysInBlock = (idx === count - 1 && state.actTargetDays % 7 !== 0) ? state.actTargetDays % 7 : 7;
                 const blockMinK = Math.round((dynamicGlobalMinK * daysInBlock));
 
+                // Streak Fire Spots for this block
+                const fireSpots = Array.from({ length: 7 }).map((_, dIdx) => {
+                    const day = startDay + dIdx;
+                    if (dIdx >= daysInBlock) return '';
+                    const log = state.dailyLogs[day];
+                    const valK = (typeof log === 'object' ? log?.val : log) / 1000;
+                    const logMinK = (typeof log === 'object' && log?.minK !== undefined) ? log.minK : dynamicGlobalMinK;
+                    const isMet = log !== undefined && log !== null && valK >= logMinK;
+                    return `<span class="text-[10px] ${isMet ? 'text-orange-500 filter drop-shadow-[0_0_8px_rgba(249,115,22,0.6)]' : 'text-gray-800'} transition-all">${isMet ? '🔥' : '·'}</span>`;
+                }).join('');
+
                 return `
-                    <div class="relative pl-14 border-l-2 border-white/5 py-4 group">
-                        <div class="absolute -left-[6px] top-12 w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.5)]"></div>
-                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-10 gap-4">
-                            <div>
-                                <h4 class="text-[10px] font-black text-gray-600 uppercase tracking-[0.5em] mb-1">DATA BLOCK ${idx + 1}</h4>
-                                <div class="global-progress-label text-[11px] font-black text-white/90 mb-2 tabular-nums">
-                                    <span class="curr-total">0</span> / <span class="goal-total">${state.actTargetAmount.toLocaleString()}</span>
+                    <div class="relative pl-0 sm:pl-14 border-l-0 sm:border-l-2 border-white/5 py-4 group">
+                        <div class="hidden sm:block absolute ${idx === activeWeekIdx ? 'animate-pulse' : ''} -left-[6px] top-12 w-2.5 h-2.5 rounded-full ${idx === activeWeekIdx ? 'bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.5)]' : 'bg-white/10'}"></div>
+                        
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 gap-4 px-2">
+                            <div class="space-y-4">
+                                <div class="flex items-center gap-4">
+                                    <h4 class="text-[9px] font-black ${idx === activeWeekIdx ? 'text-indigo-400' : 'text-gray-700'} uppercase tracking-[0.4em]">WEEK ${idx + 1}</h4>
+                                    <div class="week-streak-container flex gap-1 bg-black/40 px-2 py-1.5 rounded-xl border border-white/5">
+                                        <!-- Fire spots dynamic -->
+                                    </div>
                                 </div>
-                                <span class="block-min-label text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-[0.2em] border border-white/10 bg-white/5 text-white/50 shadow-2xl transition-all inline-block">MIN: ${blockMinK}K / BLOCK</span>
+                                <div class="flex flex-wrap items-center gap-3">
+                                    <div class="global-progress-label transition-all inline-block relative overflow-hidden px-3 py-1 rounded-full border border-white/5 bg-white/5 shadow-xl min-w-[120px]">
+                                        <div class="progress-fill absolute inset-y-0 left-0 bg-emerald-500/20 transition-all duration-500" style="width: 0%"></div>
+                                        <span class="progress-text relative z-10 text-[8px] font-black uppercase tracking-[0.2em] text-white/40">CALCULATING...</span>
+                                    </div>
+                                    <span class="block-min-label text-[8px] font-black px-3 py-1 rounded-full uppercase tracking-[0.2em] border border-white/5 bg-white/5 text-white/30 transition-all inline-block">0K / ${blockMinK}K</span>
+                                </div>
                             </div>
-                            <div class="flex items-center gap-3 bg-black/40 p-4 rounded-[2rem] border border-white/5 shadow-inner">
-                                <span class="text-[8px] font-black text-emerald-500/50 uppercase tracking-tighter">Strive Target</span>
-                                <div class="flex flex-col items-end">
-                                    <span class="text-sm font-black text-emerald-400 tabular-nums strive-formatted">${week.totalAmount.toLocaleString()}</span>
-                                    <input type="number" step="1000" min="${daysInBlock * 2000}" value="${week.totalAmount}" 
-                                        oninput="window.updateBlock('act', ${week.id}, this.value)"
-                                        class="w-20 bg-transparent border-none text-right text-gray-700 font-bold text-[9px] outline-none tabular-nums p-0 focus:text-emerald-500/50">
-                                </div>
-                                <span class="text-[8px] font-bold text-gray-700">₫</span>
+                            <div class="flex items-center gap-2 bg-black/20 px-3 py-2 rounded-xl border border-white/5 transition-all hover:bg-black/40">
+                                <span class="text-[7px] font-black text-gray-600 uppercase tracking-widest">Strive Target</span>
+                                <input type="number" step="1000" min="${daysInBlock * 2000}" value="${week.totalAmount}" 
+                                    oninput="window.updateBlock('act', ${week.id}, this.value)"
+                                    class="w-12 bg-transparent border-none text-right text-emerald-400 font-black text-[9px] outline-none tabular-nums p-0 focus:ring-1 focus:ring-emerald-500/20">
                             </div>
                         </div>
-                        <div class="grid grid-cols-4 sm:grid-cols-7 gap-6">
+
+                        <div class="grid grid-cols-7 gap-1 sm:gap-3 bg-black/10 p-2 sm:p-4 rounded-[2rem] border border-white/5">
                             ${Array.from({ length: daysInBlock }).map((_, dIdx) => {
                     const day = startDay + dIdx;
+                    const dateObj = state.actStartDate ? new Date(state.actStartDate + day * 24 * 60 * 60 * 1000) : null;
+                    const dateStr = dateObj ? `${dateObj.getDate()}/${dateObj.getMonth() + 1}` : '';
+                    const isToday = day === todayIdx;
+
                     return `
-                                    <div class="group/input flex flex-col items-center">
-                                        <div class="min-hint text-[7px] font-black text-white/60 uppercase tracking-tighter mb-2 opacity-100 transition-all bg-black/60 px-2 py-0.5 rounded shadow-sm border border-white/10 flex items-center gap-1">
-                                            <span class="min-val">DAILY MIN: ${dynamicGlobalMinK}K</span>
-                                            <span class="min-check opacity-0 text-[8px]">✅</span>
+                                    <div class="group/day flex flex-col items-center gap-1.5 relative">
+                                        ${isToday ? '<span class="absolute -top-6 text-[7px] font-black text-indigo-400 animate-bounce tracking-widest">TODAY</span>' : ''}
+                                        <div class="flex flex-col items-center opacity-40 group-hover/day:opacity-100 transition-opacity">
+                                            <span class="text-[7px] font-black ${isToday ? 'text-indigo-400' : 'text-gray-800'} uppercase tracking-tighter">D${day + 1}</span>
+                                            <span class="text-[6px] font-bold ${isToday ? 'text-indigo-400/60' : 'text-gray-900'}">${dateStr}</span>
                                         </div>
-                                        <span class="text-[8px] font-black text-gray-800 block mb-2 uppercase tracking-widest group-hover/input:text-emerald-500/30 transition-colors">D${day + 1}</span>
+                                        
+                                        <!-- Checkmark: Daily Min -->
+                                        <button onclick="window.quickCheck(${day}, ${dynamicGlobalMinK})" 
+                                            class="check-min h-8 w-full sm:w-10 rounded-lg flex items-center justify-center border border-white/5 bg-black/40 transition-all hover:scale-105 active:scale-95" 
+                                            title="Check Daily Min: ${dynamicGlobalMinK}K">
+                                            <span class="text-[10px] font-black text-white/10 check-icon">✓</span>
+                                        </button>
+
+                                        <!-- Checkmark: Strive Min (Dynamic) -->
+                                        <button onclick="window.quickStrive(${day}, ${idx})" 
+                                            class="check-strive h-8 w-full sm:w-10 rounded-lg flex items-center justify-center border border-white/5 bg-black/40 transition-all hover:scale-105 active:scale-95"
+                                            title="Check Strive Goal">
+                                            <span class="text-[10px] font-black text-white/10 check-icon">★</span>
+                                        </button>
+
                                         <div class="relative w-full">
-                                            <input type="number" min="0" oninput="window.updateDay(${day}, this.value)" 
+                                            <input type="number" min="0" 
+                                                oninput="window.updateDay(${day}, this.value, ${dynamicGlobalMinK})" 
+                                                onchange="if(this.value > 0 && this.value < 2) { this.value = 0; window.updateDay(${day}, this.value, ${dynamicGlobalMinK}); }"
                                                 placeholder="0"
-                                                class="w-full bg-black/20 border border-white/5 rounded-[1.25rem] py-5 text-center text-sm font-black focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none transition-all placeholder-gray-900 tabular-nums shadow-inner group-hover/input:bg-black/40">
-                                            <div class="act-hint absolute -bottom-5 left-1/2 -translate-x-1/2 text-[7px] font-black text-emerald-500/50 uppercase whitespace-nowrap opacity-100 pointer-events-none transition-all transform scale-90 group-hover/input:scale-100 flex items-center gap-1">
-                                                <span class="hint-text">STRIVE MIN: 0K</span>
-                                                <span class="strive-check opacity-0 text-[8px]">✅</span>
-                                            </div>
+                                                class="w-full bg-white/5 border border-white/5 rounded-lg py-2 text-center text-[9px] font-black focus:border-emerald-500/50 outline-none transition-all placeholder-gray-900 tabular-nums">
                                         </div>
                                     </div>
                                 `;
@@ -478,9 +575,10 @@ class UIManager {
             let sumInBlock = 0;
             let loggedDaysCountInBlock = 0;
             for (let i = 0; i < daysInBlock; i++) {
-                const val = state.dailyLogs[startDay + i];
-                if (val !== undefined && val !== null) {
-                    sumInBlock += val;
+                const log = state.dailyLogs[startDay + i];
+                if (log !== undefined && log !== null) {
+                    const val = typeof log === 'object' ? log.val : log;
+                    sumInBlock += (val || 0);
                     loggedDaysCountInBlock++;
                 }
             }
@@ -492,41 +590,125 @@ class UIManager {
                 const blockSumK = sumInBlock / 1000;
                 const blockLeftK = Math.max(0, blockMinK - blockSumK);
 
-                const formattedLeft = blockLeftK % 1 === 0 ? blockLeftK.toFixed(0) : blockLeftK.toFixed(1);
-                blockMinLabel.textContent = `MIN: ${formattedLeft}K / BLOCK`;
+                const formattedSum = blockSumK % 1 === 0 ? blockSumK.toFixed(0) : blockSumK.toFixed(1);
+                blockMinLabel.textContent = `${formattedSum}K / ${blockMinK}K`;
 
                 if (blockLeftK <= 0 && loggedDaysCountInBlock > 0) {
-                    blockMinLabel.className = "block-min-label text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-[0.2em] border border-emerald-500/30 bg-emerald-500/20 text-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.1)] transition-all inline-block";
+                    blockMinLabel.className = "block-min-label text-[8px] font-black px-3 py-1 rounded-full uppercase tracking-[0.2em] border border-emerald-500/30 bg-emerald-500/20 text-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.1)] transition-all inline-block";
                 } else {
-                    blockMinLabel.className = "block-min-label text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-[0.2em] border border-white/10 bg-white/5 text-white/50 shadow-2xl transition-all inline-block";
+                    blockMinLabel.className = "block-min-label text-[8px] font-black px-3 py-1 rounded-full uppercase tracking-[0.2em] border border-white/5 bg-white/5 text-white/30 transition-all inline-block";
+                }
+
+                // Update Week-level Streak (Fire Spots)
+                const streakWrapper = block.querySelector('.week-streak-container')?.parentElement;
+                const streakContainer = block.querySelector('.week-streak-container');
+
+                if (!streakWrapper || !streakContainer) return;
+
+                // Only show fire streak for the CURRENT active week
+                if (idx === activeWeekIdx) {
+                    streakWrapper.style.display = 'flex';
+                    streakContainer.innerHTML = Array.from({ length: 7 }).map((_, dIdx) => {
+                        const day = startDay + dIdx;
+                        if (day >= state.actTargetDays) return '<span class="text-[10px] opacity-5">🔥</span>';
+
+                        const log = state.dailyLogs[day];
+                        const val = typeof log === 'object' ? log?.val : log;
+                        const logMinK = (typeof log === 'object' && log?.minK !== undefined) ? log.minK : dynamicGlobalMinK;
+                        const valK = (val || 0) / 1000;
+                        const isLogged = log !== undefined && log !== null;
+                        const isMetDaily = isLogged && valK >= logMinK;
+
+                        // Strive hint logic (Always shows current target based on goal)
+                        const remainingDays = Math.max(1, daysInBlock - (isLogged ? loggedDaysCountInBlock - 1 : loggedDaysCountInBlock));
+                        const remainingAmt = Math.max(0, week.totalAmount - (isLogged ? sumInBlock - (val || 0) : sumInBlock));
+                        const striveK = Math.max(2, Math.round((remainingAmt / remainingDays) / 1000));
+                        const isMetStrive = isLogged && valK >= striveK;
+
+                        if (isMetStrive) return `<span class="text-[11px] text-orange-400 filter drop-shadow-[0_0_8px_rgba(251,146,60,0.8)] opacity-100 transition-all scale-110">🔥</span>`;
+                        if (isMetDaily) return `<span class="text-[10px] text-orange-600/80 opacity-90 transition-all">🔥</span>`;
+                        if (isLogged && (val || 0) >= 2000) return `<span class="text-[10px] text-blue-400 filter drop-shadow-[0_0_5px_rgba(96,165,250,0.4)] opacity-60 transition-all" title="Streak Frozen">❄️</span>`;
+                        if (isLogged) return `<span class="text-[10px] text-gray-600 opacity-40 transition-all">🔥</span>`;
+                        return `<span class="text-[10px] text-gray-800 opacity-20 filter grayscale transition-all">🔥</span>`;
+                    }).join('');
+                } else {
+                    streakWrapper.style.display = 'none';
+                }
+
+                // Update Global Streak Banner Color if Broken
+                const streakBanner = document.querySelector('#local-streak-val')?.parentElement;
+                if (streakBanner) {
+                    if (analytics.streak === 0 && (analytics.lastDayLogged !== -1)) {
+                        streakBanner.className = "bg-rose-600/10 border border-rose-500/40 px-6 py-3 rounded-2xl flex items-center gap-4 shadow-xl animate-pulse";
+                    } else {
+                        streakBanner.className = "bg-indigo-600/10 border border-indigo-500/20 px-6 py-3 rounded-2xl flex items-center gap-4 shadow-xl";
+                    }
                 }
 
                 // Update Global Progress within Block
                 const globalProgressLabel = block.querySelector('.global-progress-label');
                 if (globalProgressLabel) {
-                    const currSpan = globalProgressLabel.querySelector('.curr-total');
-                    const goalSpan = globalProgressLabel.querySelector('.goal-total');
-                    if (currSpan) currSpan.textContent = totalLoggedAmount.toLocaleString();
-                    if (goalSpan) goalSpan.textContent = state.actTargetAmount.toLocaleString();
+                    const percentage = Math.min(100, Math.floor((totalLoggedAmount / state.actTargetAmount) * 100));
+                    const fill = globalProgressLabel.querySelector('.progress-fill');
+                    const text = globalProgressLabel.querySelector('.progress-text');
+
+                    if (fill) fill.style.width = `${percentage}%`;
+
+                    let msg = "BẮT ĐẦU THÔI!";
+                    if (percentage >= 100) msg = "MỤC TIÊU ĐÃ ĐẠT! 🎉";
+                    else if (percentage >= 90) msg = "SẮP ĐẦY RỒI! CỐ LÊN 🔥";
+                    else if (percentage >= 75) msg = "TIẾN RẤT GẦN RỒI! 🚀";
+                    else if (percentage >= 50) msg = "VẪN ĐANG CỐ GẮNG! 💪";
+                    else if (percentage >= 25) msg = "ĐANG TẠO ĐÀ... ⚡";
+                    else if (percentage > 0) msg = "ĐÃ CÓ TIẾN TRIỂN";
+
+                    if (text) {
+                        text.textContent = `${percentage}% - ${msg}`;
+                        if (percentage >= 50) {
+                            text.className = "progress-text relative z-10 text-[9px] font-black uppercase tracking-[0.1em] text-emerald-400";
+                            fill.className = "progress-fill absolute inset-y-0 left-0 bg-emerald-500/30 transition-all duration-700";
+                        } else {
+                            text.className = "progress-text relative z-10 text-[9px] font-black uppercase tracking-[0.1em] text-white/50";
+                            fill.className = "progress-fill absolute inset-y-0 left-0 bg-white/10 transition-all duration-700";
+                        }
+                    }
+
+                    if (percentage >= 100) {
+                        globalProgressLabel.className = "global-progress-label transition-all inline-block relative overflow-hidden px-3 py-1 rounded-full border border-indigo-500/30 bg-indigo-500/10 shadow-[0_0_20px_rgba(99,102,241,0.1)] min-w-[120px]";
+                        if (fill) fill.className = "progress-fill absolute inset-y-0 left-0 bg-indigo-500/40 transition-all duration-700";
+                    } else {
+                        globalProgressLabel.className = "global-progress-label transition-all inline-block relative overflow-hidden px-3 py-1 rounded-full border border-white/5 bg-white/5 shadow-xl min-w-[120px]";
+                    }
                 }
             }
 
             const targetInput = block.querySelector('input[oninput*="updateBlock"]');
-            const striveFormatted = block.querySelector('.strive-formatted');
-            if (document.activeElement !== targetInput) targetInput.value = week.totalAmount;
-            striveFormatted.textContent = week.totalAmount.toLocaleString();
+            if (targetInput) {
+                if (document.activeElement !== targetInput) targetInput.value = week.totalAmount;
+                targetInput.disabled = state.isLocked;
+            }
 
-            block.querySelectorAll('.group\\/input').forEach((inputGroup, dIdx) => {
-                const input = inputGroup.querySelector('input[oninput*="updateDay"]');
-                const minHintEl = inputGroup.querySelector('.min-hint');
-                const minValSpan = minHintEl.querySelector('.min-val');
-                const actHintEl = inputGroup.querySelector('.act-hint');
-                const minCheck = minHintEl.querySelector('.min-check');
-                const striveCheck = actHintEl.querySelector('.strive-check');
-                const hintText = actHintEl.querySelector('.hint-text');
+            block.querySelectorAll('.group\\/day').forEach((dayCell, dIdx) => {
+                const input = dayCell.querySelector('input');
+                const checkMin = dayCell.querySelector('.check-min');
+                const checkStrive = dayCell.querySelector('.check-strive');
+                const checkMinIcon = checkMin.querySelector('.check-icon');
+                const checkStriveIcon = checkStrive.querySelector('.check-icon');
 
                 const day = startDay + dIdx;
-                const dailyValK = state.dailyLogs[day] !== undefined && state.dailyLogs[day] !== null ? state.dailyLogs[day] / 1000 : null;
+                const isToday = day === todayIdx;
+
+                // Highlight today's container
+                if (isToday) {
+                    dayCell.classList.add('bg-indigo-500/5', 'rounded-xl', 'ring-1', 'ring-indigo-500/20');
+                } else {
+                    dayCell.classList.remove('bg-indigo-500/5', 'rounded-xl', 'ring-1', 'ring-indigo-500/20');
+                }
+
+                const log = state.dailyLogs[day];
+                const dailyVal = typeof log === 'object' ? log?.val : log;
+                const logMinK = (typeof log === 'object' && log?.minK !== undefined) ? log.minK : dynamicGlobalMinK;
+                const dailyValK = (dailyVal !== undefined && dailyVal !== null) ? dailyVal / 1000 : null;
                 const isLogged = dailyValK !== null;
 
                 const remainingDaysInBlock = daysInBlock - loggedDaysCountInBlock;
@@ -545,62 +727,31 @@ class UIManager {
                     input.value = isLogged ? dailyValK : '';
                 }
 
-                // Update dynamic values in the UI elements
-                if (minValSpan) minValSpan.textContent = `DAILY MIN: ${dynamicGlobalMinK}K`;
-
+                // UI feedback for buttons
                 if (isLogged) {
-                    const isGreaterOrEqualStrive = dailyValK >= striveHintK;
-                    const isGreaterStrive = dailyValK > striveHintK;
-                    const isLesserStrive = dailyValK < striveHintK;
-                    const isLesserMin = dailyValK < dynamicGlobalMinK;
+                    const isMetDaily = dailyValK >= logMinK;
+                    const isMetStrive = dailyValK >= striveHintK;
 
-                    // Update Text for Logged Days
-                    const blockMinK = Math.round(dynamicGlobalMinK * daysInBlock);
-                    const blockSumK = sumInBlock / 1000;
-                    const blockLeftK = Math.max(0, blockMinK - blockSumK);
-
-                    const minSpan = minHintEl.querySelector('.min-val');
-                    if (minSpan) {
-                        if (!isLesserMin) {
-                            minSpan.textContent = `DAILY MIN MET (${blockLeftK.toFixed(1)}K LEFT)`;
-                        } else {
-                            const dailyGapK = (dynamicGlobalMinK - dailyValK).toFixed(1);
-                            minSpan.textContent = `DAILY MIN GAP: ${dailyGapK}K (${blockLeftK.toFixed(1)}K LEFT)`;
-                        }
+                    if (isMetDaily) {
+                        checkMin.className = "check-min h-8 w-full sm:w-10 rounded-lg flex items-center justify-center border border-emerald-500/30 bg-emerald-500/20 shadow-[0_0_10px_rgba(16,185,129,0.2)]";
+                        checkMinIcon.className = "text-[10px] font-black text-emerald-400 check-icon";
+                    } else {
+                        checkMin.className = "check-min h-8 w-full sm:w-10 rounded-lg flex items-center justify-center border border-rose-500/20 bg-rose-500/10";
+                        checkMinIcon.className = "text-[10px] font-black text-rose-500/50 check-icon";
                     }
 
-                    const blockStriveTargetK = week.totalAmount / 1000;
-                    const blockStriveLeftK = Math.max(0, blockStriveTargetK - blockSumK);
-                    const striveStatusText = isGreaterOrEqualStrive ? "STRIVE MET" : `STRIVE GAP: ${(striveHintK - dailyValK).toFixed(1)}K`;
-                    hintText.textContent = `${striveStatusText} (${blockStriveLeftK.toFixed(1)}K LEFT)`;
-
-                    // Cases
-                    if (!isLesserMin) {
-                        // MIN IS MET (Emerald)
-                        minHintEl.className = "min-hint text-[7px] font-black text-emerald-400 uppercase tracking-tighter mb-2 bg-emerald-500/10 px-2 py-0.5 rounded shadow-sm border border-emerald-500/20 flex items-center gap-1";
-                        minCheck.style.opacity = "1";
+                    if (isMetStrive) {
+                        checkStrive.className = "check-strive h-8 w-full sm:w-10 rounded-lg flex items-center justify-center border border-orange-500/30 bg-orange-500/20 shadow-[0_0_10px_rgba(249,115,22,0.2)]";
+                        checkStriveIcon.className = "text-[10px] font-black text-orange-400 check-icon";
                     } else {
-                        // MIN IS NOT MET (Rose)
-                        minHintEl.className = "min-hint text-[7px] font-black text-rose-500 uppercase tracking-tighter mb-2 bg-rose-500/10 px-2 py-0.5 rounded shadow-sm border border-rose-500/20 flex items-center gap-1";
-                        minCheck.style.opacity = "0";
-                    }
-
-                    if (isGreaterOrEqualStrive) {
-                        // STRIVE IS MET (Emerald)
-                        actHintEl.className = "act-hint absolute -bottom-5 left-1/2 -translate-x-1/2 text-[7px] font-black text-emerald-400 uppercase whitespace-nowrap opacity-100 pointer-events-none transition-all transform scale-100 flex items-center gap-1";
-                        striveCheck.style.opacity = "1";
-                    } else {
-                        // STRIVE IS NOT MET (Rose)
-                        actHintEl.className = "act-hint absolute -bottom-5 left-1/2 -translate-x-1/2 text-[7px] font-black text-rose-500 uppercase whitespace-nowrap opacity-100 pointer-events-none transition-all transform scale-100 flex items-center gap-1";
-                        striveCheck.style.opacity = "0";
+                        checkStrive.className = "check-strive h-8 w-full sm:w-10 rounded-lg flex items-center justify-center border border-white/5 bg-black/40";
+                        checkStriveIcon.className = "text-[10px] font-black text-white/10 check-icon";
                     }
                 } else {
-                    // Reset to idle (unlogged)
-                    hintText.textContent = `STRIVE MIN: ${striveHintK}K${striveHintK < 2 ? ' (<2K)' : ''}`;
-                    minHintEl.className = "min-hint text-[7px] font-black text-white/60 uppercase tracking-tighter mb-2 bg-black/60 px-2 py-0.5 rounded shadow-sm border border-white/10 flex items-center gap-1";
-                    actHintEl.className = "act-hint absolute -bottom-5 left-1/2 -translate-x-1/2 text-[7px] font-black text-emerald-500/50 uppercase whitespace-nowrap opacity-100 pointer-events-none transition-all transform scale-90 flex items-center gap-1";
-                    minCheck.style.opacity = "0";
-                    striveCheck.style.opacity = "0";
+                    checkMin.className = "check-min h-8 w-full sm:w-10 rounded-lg flex items-center justify-center border border-white/5 bg-black/40 hover:bg-white/5";
+                    checkMinIcon.className = "text-[10px] font-black text-white/5 check-icon";
+                    checkStrive.className = "check-strive h-8 w-full sm:w-10 rounded-lg flex items-center justify-center border border-white/5 bg-black/40 hover:bg-white/5";
+                    checkStriveIcon.className = "text-[10px] font-black text-white/5 check-icon";
                 }
             });
         });
@@ -619,9 +770,75 @@ class UIManager {
         document.getElementById('act-target-days')?.addEventListener('input', e => stateManager.updateActGoal(stateManager.state.actTargetAmount, Number(e.target.value)));
 
         window.updateBlock = (mode, id, val) => stateManager.updateWeeklyAmount(mode, id, Number(val));
-        window.updateDay = (day, val) => {
+
+        window.toggleLock = () => {
+            const isCurrentlyLocked = stateManager.state.isLocked;
+            if (!isCurrentlyLocked) {
+                if (confirm("COMMIT GOAL?\n\nOnce committed, your main parameters will be locked to preserve historical integrity. You cannot easily change them until you manually unlock.")) {
+                    stateManager.toggleLock();
+                }
+            } else {
+                if (confirm("UNLOCK GOAL?\n\nChanging targets mid-streak may affect how past achievements are viewed. Proceed?")) {
+                    stateManager.toggleLock();
+                }
+            }
+        };
+
+        window.updateDay = (day, val, thresholdK = null) => {
             const numVal = val === '' ? null : Number(val);
-            stateManager.updateDailyLog(day, numVal === null ? null : numVal * 1000);
+            stateManager.updateDailyLog(day, numVal === null ? null : numVal * 1000, thresholdK);
+        };
+        window.quickCheck = (day, minK) => {
+            const current = stateManager.state.dailyLogs[day];
+            if (current && current / 1000 >= minK) {
+                window.updateDay(day, '');
+            } else {
+                window.updateDay(day, minK, minK);
+            }
+        };
+        window.quickStrive = (day, weekIdx) => {
+            const state = stateManager.state;
+            const week = state.actWeeksConfig[weekIdx];
+            const daysInBlock = (weekIdx === state.actWeeksConfig.length - 1 && state.actTargetDays % 7 !== 0) ? state.actTargetDays % 7 : 7;
+
+            // Derive sum in block for dynamic strive hint
+            const startDay = weekIdx * 7;
+            let sumInBlock = 0;
+            let loggedDaysCountInBlock = 0;
+            for (let i = 0; i < daysInBlock; i++) {
+                const val = state.dailyLogs[startDay + i];
+                if (val !== undefined && val !== null) {
+                    sumInBlock += val;
+                    loggedDaysCountInBlock++;
+                }
+            }
+
+            const isLogged = state.dailyLogs[day] !== undefined && state.dailyLogs[day] !== null;
+            const remainingDaysInBlock = daysInBlock - (isLogged ? loggedDaysCountInBlock - 1 : loggedDaysCountInBlock);
+
+            let striveHintK = 0;
+            const remainingAmount = Math.max(0, week.totalAmount - (isLogged ? sumInBlock - state.dailyLogs[day] : sumInBlock));
+            striveHintK = remainingDaysInBlock > 0
+                ? Math.round((remainingAmount / remainingDaysInBlock) / 1000)
+                : Math.round((week.totalAmount / daysInBlock) / 1000);
+
+            const current = state.dailyLogs[day];
+            const currentK = current ? current / 1000 : 0;
+
+            // Re-calculate dynamicGlobalMinK locally for reversion
+            const dayIndices = Object.keys(state.dailyLogs).map(Number);
+            const lastDayLogged = dayIndices.length > 0 ? Math.max(...dayIndices) : -1;
+            const totalLoggedAmount = Object.values(state.dailyLogs).reduce((a, b) => a + (b || 0), 0);
+            const remAmtK = (state.actTargetAmount - totalLoggedAmount) / 1000;
+            const remDays = Math.max(1, state.actTargetDays - (lastDayLogged + 1));
+            const dynamicGlobalMinK = Math.max(2, Math.round((remAmtK / remDays) * 10) / 10);
+
+            if (currentK >= striveHintK) {
+                // Toggle back to Daily Min instead of clearing
+                window.updateDay(day, dynamicGlobalMinK, dynamicGlobalMinK);
+            } else {
+                window.updateDay(day, Math.max(2, striveHintK), dynamicGlobalMinK);
+            }
         };
         window.resetState = () => { if (confirm('Purge all data streams?')) { stateManager.reset(); window.location.reload(); } };
 

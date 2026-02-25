@@ -11,6 +11,11 @@ const defaultState = {
     actTargetDays: 30,
     actWeeksConfig: [], // NEW: Targets per tracking block
     dailyLogs: {},   // Key: dayIndex, Value: amount
+    actStartDate: null,
+
+    // NEW: Integrity & Lock
+    isLocked: false,
+    logThresholds: {}, // Key: dayIndex, Value: minK at time of logging (Frozen history)
 };
 
 class StateManager {
@@ -40,6 +45,14 @@ class StateManager {
                     data.actTargetDays = data.targetDays;
                     delete data.targetDays;
                 }
+                if (data.isLocked === undefined) data.isLocked = false;
+                if (!data.logThresholds) data.logThresholds = {};
+                if (!data.actStartDate) {
+                    const now = new Date();
+                    now.setHours(0, 0, 0, 0);
+                    data.actStartDate = now.getTime();
+                }
+
                 return data;
             } catch (e) {
                 console.error('Failed to parse state', e);
@@ -64,7 +77,14 @@ class StateManager {
         this.subscribers.forEach(callback => callback(this.state));
     }
 
+    toggleLock() {
+        this.state.isLocked = !this.state.isLocked;
+        this.saveState();
+        return this.state.isLocked;
+    }
+
     updateSimGoal(amount, days) {
+        if (this.state.isLocked) return;
         this.state.simTargetAmount = Math.max(2000, amount);
         const oldDays = this.state.simTargetDays;
         this.state.simTargetDays = Math.max(1, days);
@@ -73,6 +93,7 @@ class StateManager {
     }
 
     updateActGoal(amount, days) {
+        if (this.state.isLocked) return;
         this.state.actTargetAmount = Math.max(2000, amount);
         const oldDays = this.state.actTargetDays;
         const newDays = Math.max(1, days);
@@ -83,6 +104,7 @@ class StateManager {
             Object.keys(this.state.dailyLogs).forEach(day => {
                 if (parseInt(day) >= newDays) {
                     delete this.state.dailyLogs[day];
+                    delete this.state.logThresholds[day];
                 }
             });
         }
@@ -92,12 +114,19 @@ class StateManager {
     }
 
     syncConfigs() {
+        // Init start date for new users immediately
+        if (!this.state.actStartDate) {
+            const now = new Date();
+            now.setHours(0, 0, 0, 0);
+            this.state.actStartDate = now.getTime();
+        }
         this.recalculateWeeks('sim', this.state.simWeeksConfig.length === 0);
         if (!this.state.actWeeksConfig) this.state.actWeeksConfig = [];
         this.recalculateWeeks('act', this.state.actWeeksConfig.length === 0);
     }
 
     recalculateWeeks(mode, rebuild = false) {
+        if (this.state.isLocked && rebuild) return; // Protection
         const prefix = mode === 'sim' ? 'sim' : 'act';
         const targetAmount = this.state[`${prefix}TargetAmount`];
         const targetDays = this.state[`${prefix}TargetDays`];
@@ -128,6 +157,7 @@ class StateManager {
     }
 
     updateWeeklyAmount(mode, weekId, amount) {
+        if (this.state.isLocked) return;
         const configKey = mode === 'sim' ? 'simWeeksConfig' : 'actWeeksConfig';
         const targetDays = mode === 'sim' ? this.state.simTargetDays : this.state.actTargetDays;
         const weekIdx = this.state[configKey].findIndex(w => w.id === weekId);
@@ -141,11 +171,24 @@ class StateManager {
         }
     }
 
-    updateDailyLog(dayIndex, amount) {
+    updateDailyLog(dayIndex, amount, currentThresholdK = null) {
         if (amount === null || amount === undefined || amount === '') {
             delete this.state.dailyLogs[dayIndex];
+            delete this.state.logThresholds[dayIndex];
         } else {
             this.state.dailyLogs[dayIndex] = Number(amount);
+
+            // Auto-initialize start date if first log
+            if (!this.state.actStartDate) {
+                const now = new Date();
+                now.setHours(0, 0, 0, 0);
+                this.state.actStartDate = now.getTime();
+            }
+
+            // Freeze the criteria for this day if provided
+            if (currentThresholdK !== null) {
+                this.state.logThresholds[dayIndex] = currentThresholdK;
+            }
         }
         this.saveState();
     }

@@ -114,36 +114,50 @@ export function calculateAnalytics(state) {
     if (days.length === 0) return { streak: 0, heatmap: [], insight: "Ready to start your journey? Log your first day!" };
 
     // Calculate Dynamic Min (same logic as UI)
-    let totalLogged = 0;
-    let loggedCount = 0;
-    Object.entries(dailyLogs).forEach(([day, val]) => {
-        if (val !== null && parseInt(day) < actTargetDays) {
-            totalLogged += val;
-            loggedCount++;
-        }
-    });
+    const totalLogged = Object.values(dailyLogs).reduce((a, b) => a + (b || 0), 0);
+    const lastDayRecorded = days.length > 0 ? Math.max(...days) : -1;
+
     const remAmt = Math.max(0, actTargetAmount - totalLogged);
-    const remDays = Math.max(0, actTargetDays - loggedCount);
-    const currentMinK = remDays > 0
-        ? Math.round((remAmt / remDays) / 1000 * 10) / 10
-        : Math.round(actTargetAmount / actTargetDays / 1000 * 10) / 10;
+    const remDays = Math.max(1, actTargetDays - (lastDayRecorded + 1));
+    const currentMinK = Math.round((remAmt / remDays) / 1000 * 10) / 10;
 
     // Heatmap & Streak
     let streak = 0;
     let maxStreak = 0;
+    let consecutiveFreezeDays = 0;
     const heatmap = [];
     const lastDay = Math.max(...days);
 
     for (let i = 0; i <= lastDay; i++) {
         const val = dailyLogs[i];
-        if (val !== undefined && val !== null) {
-            const isMet = (val / 1000) >= currentMinK;
-            if (isMet) streak++;
-            else streak = 0;
+        const isLogged = val !== undefined && val !== null;
+
+        // Use frozen threshold if exists, otherwise current
+        const thresholdK = (state.logThresholds && state.logThresholds[i]) ? state.logThresholds[i] : currentMinK;
+
+        if (isLogged) {
+            const isMet = (val / 1000) >= thresholdK;
+            if (isMet) {
+                streak++; // Tăng chuỗi nếu đạt chỉ tiêu
+                consecutiveFreezeDays = 0;
+            } else if (val >= 2000) {
+                // "STREAK FREEZE": Không tăng nhưng cũng không reset nếu có nỗ lực tối thiểu (2K)
+                // GIỚI HẠN: Chỉ được băng tối đa 2 ngày liên tiếp
+                consecutiveFreezeDays++;
+                if (consecutiveFreezeDays > 2) {
+                    streak = 0;
+                    consecutiveFreezeDays = 0;
+                } else {
+                    streak = streak;
+                }
+            } else {
+                streak = 0; // Reset nếu nhập 0 hoặc quá ít
+                consecutiveFreezeDays = 0;
+            }
             maxStreak = Math.max(maxStreak, streak);
 
-            // Intensity: 0 to 4 based on val relative to currentMinK
-            const ratio = (val / 1000) / currentMinK;
+            // Intensity: 0 to 4
+            const ratio = (val / 1000) / thresholdK;
             let intensity = 0;
             if (ratio > 0) intensity = 1;
             if (ratio >= 1) intensity = 2;
@@ -152,6 +166,7 @@ export function calculateAnalytics(state) {
 
             heatmap.push({ day: i, intensity, val: val / 1000 });
         } else {
+            // Dứt chuỗi hoàn toàn nếu không đăng nhập/nhập gì
             streak = 0;
             heatmap.push({ day: i, intensity: 0, val: 0 });
         }
@@ -163,5 +178,5 @@ export function calculateAnalytics(state) {
     if (totalLogged >= actTargetAmount * 0.5) insight = "Halfway there! You've secured 50% of your real goal. Finish strong!";
     if (currentMinK > 5000) insight = "The daily requirement is getting high. Try to log a big save soon to stabilize it.";
 
-    return { streak, maxStreak, heatmap, insight, currentMinK };
+    return { streak, maxStreak, heatmap, insight, currentMinK, lastDayLogged: lastDay, totalLogged };
 }

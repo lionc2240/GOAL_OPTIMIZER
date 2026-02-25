@@ -97,7 +97,7 @@ export function createUnifiedChart(ctx, data) {
     const { simPath, actPath, projPath, simTarget, actTarget, simDays, actDays } = data;
 
     // DYNAMIC ZOOM with Padding
-    const rawMax = Math.max(simPath.length, projPath.length, simDays + 1, actDays + 1);
+    const rawMax = Math.max(simPath.length, projPath.length, simDays + 1, actDays + 1, data.momentumDay || 0);
     const padding = Math.max(2, Math.ceil(rawMax * 0.1));
     const maxLength = rawMax + padding;
 
@@ -190,7 +190,8 @@ export function createUnifiedChart(ctx, data) {
                 roadmap: {
                     deadlines: [
                         { day: simDays, color: 'rgba(59, 130, 246, 0.6)', label: 'Sim Deadline' },
-                        { day: actDays, color: 'rgba(16, 185, 129, 0.6)', label: 'Live Deadline' }
+                        { day: actDays, color: 'rgba(255, 255, 255, 0.2)', label: 'Target Deadline' },
+                        { day: data.momentumDay, color: '#10b981', label: 'Momentum Finish' }
                     ],
                     goals: [
                         { amount: simTarget, color: 'rgba(59, 130, 246, 0.6)', label: 'Theory Target' },
@@ -225,7 +226,8 @@ export function updateUnifiedChart(chart, data) {
     chart.options.plugins.roadmap = {
         deadlines: [
             { day: simDays, color: 'rgba(59, 130, 246, 0.6)', label: 'Sim Deadline' },
-            { day: actDays, color: 'rgba(16, 185, 129, 0.6)', label: 'Live Deadline' }
+            { day: actDays, color: 'rgba(255, 255, 255, 0.2)', label: 'Target Deadline' },
+            { day: data.momentumDay, color: '#10b981', label: 'Momentum Finish' }
         ],
         goals: [
             { amount: simTarget, color: 'rgba(59, 130, 246, 0.6)', label: 'Theory Target' },
